@@ -1,0 +1,1554 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #17181A;
+    --surface: #212327;
+    --surface-raised: #2A2D32;
+    --border: #3A3D42;
+    --text: #EDEDE6;
+    --text-muted: #9A9DA3;
+    --accent: #E8A33D;
+    --accent-dim: #4A3D25;
+    --ok: #7A9B76;
+    --warn: #E8A33D;
+    --danger: #C1613D;
+    --off: #5C5F63;
+    --radius: 3px;
+    --font-display: 'Oswald', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #app { min-height: 100%; padding: 0 0 60px 0; }
+
+  /* ---------- Header ---------- */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 20px 0 20px;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .brand-mark {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .brand h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .btn {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    padding: 9px 16px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color .15s, background .15s;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn-primary {
+    background: var(--accent);
+    color: #1A1608;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: #f0ad4f; }
+  .btn-ghost { background: transparent; }
+  .btn-danger { color: var(--danger); border-color: var(--danger); background: transparent; }
+  .btn-danger:hover { background: rgba(193,97,61,0.12); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .tab {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 10px 4px 12px 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-right: 22px;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    padding: 14px 0;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .search-input {
+    flex: 1;
+    min-width: 160px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 12px;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 13px;
+  }
+  .search-input:focus { outline: none; border-color: var(--accent); }
+  select.filter-select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 10px;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 13px;
+  }
+
+  .content { padding: 0 20px; max-width: 1100px; margin: 0 auto; }
+
+  /* ---------- Grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 16px;
+    margin-top: 6px;
+  }
+
+  .tag-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform .12s, border-color .12s;
+  }
+  .tag-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+
+  .photo-frame {
+    position: relative;
+    background: var(--bg);
+    padding: 6px;
+  }
+  .photo-frame .photo-inner {
+    aspect-ratio: 4/3;
+    background: var(--surface-raised);
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .photo-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-placeholder { color: var(--off); font-size: 11px; font-family: var(--font-mono); }
+  .punch-hole {
+    position: absolute;
+    top: 12px; left: 12px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+    z-index: 2;
+  }
+
+  .tag-body { padding: 10px 12px 12px 12px; }
+  .tag-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .tag-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.25;
+    margin-bottom: 6px;
+    word-break: break-word;
+  }
+  .tag-code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .status-row { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .status-label { color: var(--text-muted); }
+  .location-row {
+    margin-top: 5px;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ---------- Empty state ---------- */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state h3 {
+    font-family: var(--font-display);
+    color: var(--text);
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .empty-state p { font-size: 13px; max-width: 340px; margin: 0 auto; line-height: 1.6; }
+
+  /* ---------- Projects list ---------- */
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+  .project-card:hover { border-color: var(--accent); }
+  .project-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .project-name { font-family: var(--font-display); font-weight: 500; font-size: 17px; }
+  .project-dates { font-family: var(--font-mono); font-size: 12px; color: var(--accent); white-space: nowrap; }
+  .project-meta { margin-top: 6px; font-size: 12px; color: var(--text-muted); }
+  .project-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 8px;
+  }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(10,10,10,0.65);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 100;
+    padding: 30px 16px;
+    overflow-y: auto;
+  }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    width: 100%;
+    max-width: 520px;
+    padding: 22px 22px 20px 22px;
+  }
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+  .modal-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+  .close-x { cursor: pointer; color: var(--text-muted); font-size: 20px; line-height: 1; background: none; border: none; }
+  .close-x:hover { color: var(--text); }
+
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  .field input[type=text], .field input[type=number], .field input[type=date],
+  .field select, .field textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 10px;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 13.5px;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 60px; }
+  .field-row { display: flex; gap: 10px; }
+  .field-row .field { flex: 1; }
+
+  .photo-upload-area {
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .photo-preview {
+    width: 100%;
+    max-width: 240px;
+    aspect-ratio: 4/3;
+    margin: 0 auto 10px auto;
+    background: var(--bg);
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-preview .ph-icon { color: var(--off); font-size: 12px; font-family: var(--font-mono); }
+
+  .modal-actions {
+    display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;
+  }
+
+  /* checklist for project items */
+  .item-checklist {
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px;
+  }
+  .check-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .check-row:last-child { border-bottom: none; }
+  .check-row input { margin-top: 3px; }
+  .check-row .ci-name { font-weight: 500; }
+  .check-row .ci-code { color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; }
+  .check-row .ci-conflict { color: var(--danger); font-size: 11px; margin-top: 2px; }
+
+  /* detail modal */
+  .detail-photo {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .detail-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .detail-photo .ph-icon { color: var(--off); font-family: var(--font-mono); font-size: 13px; }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    margin-bottom: 16px;
+  }
+  .detail-item label { display:block; font-size: 11px; color: var(--text-muted); margin-bottom:2px; text-transform: uppercase; letter-spacing: 0.4px;}
+  .detail-item div { font-size: 13.5px; }
+  .detail-item.mono div { font-family: var(--font-mono); }
+  .detail-notes { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; white-space: pre-wrap; }
+  .section-label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin: 18px 0 8px 0;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+  .usage-row { display: flex; justify-content: space-between; font-size: 12.5px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .usage-row:last-child { border-bottom: none; }
+
+  /* chips */
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .chip.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .chip-manage {
+    border-style: dashed;
+    color: var(--off);
+    opacity: 0.7;
+    margin-left: auto;
+  }
+  .chip-manage:hover { opacity: 1; border-color: var(--accent); color: var(--accent); }
+
+  /* toast */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface-raised);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 10px 18px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity .2s, transform .2s;
+    z-index: 200;
+    pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .hint-text { font-size: 11.5px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+
+  /* ---------- group overview (compact chip strip) ---------- */
+  .group-overview-wrap { margin: 4px 0 18px 0; }
+  .group-overview-label {
+    font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px;
+  }
+  .group-chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .group-chip {
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--font-body); font-size: 12.5px; font-weight: 500;
+    padding: 7px 12px; border-radius: 14px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); cursor: pointer;
+  }
+  .group-chip:hover { border-color: var(--accent); }
+  .group-chip.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+  .group-chip .gc-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+  .group-chip.active .gc-count { color: var(--accent); }
+  .group-chip.low .gc-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--danger); flex-shrink: 0; }
+
+  /* ---------- group link in detail view ---------- */
+  .group-link {
+    color: var(--accent); text-decoration: none; cursor: pointer;
+    border-bottom: 1px dashed var(--accent);
+    padding-bottom: 1px;
+  }
+  .group-link:hover { color: #f0ad4f; border-bottom-style: solid; }
+  .active-filter-banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: var(--accent-dim); border: 1px solid var(--accent); border-radius: var(--radius);
+    padding: 8px 14px; margin-bottom: 14px; font-size: 13px;
+  }
+  .active-filter-banner strong { color: var(--accent); }
+  .active-filter-banner button { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px; text-decoration:underline; }
+
+  /* ---------- quantity ---------- */
+  .qty-badge {
+    font-family: var(--font-mono); font-size: 11px; color: var(--accent);
+    margin-top: 4px;
+  }
+  .qty-section { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 12px; padding: 12px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); }
+  .qty-current { font-family: var(--font-display); font-size: 28px; color: var(--accent); }
+  .qty-current-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .qty-actions { display:flex; gap:8px; flex-wrap: wrap; }
+  .log-row { display:flex; justify-content: space-between; align-items:center; font-size: 12.5px; padding: 7px 0; border-bottom: 1px solid var(--border); gap: 8px; }
+  .log-row:last-child { border-bottom: none; }
+  .log-type { font-family: var(--font-mono); font-size: 10px; padding: 2px 7px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+  .log-delta { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+  .log-note { color: var(--text-muted); flex: 1; }
+  .log-date { font-family: var(--font-mono); color: var(--text-muted); white-space: nowrap; }
+  .qty-field-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ---------- low stock ---------- */
+  .qty-badge.low-stock { color: var(--danger); font-weight: 600; }
+  .low-stock-tag {
+    display: inline-block; font-family: var(--font-mono); font-size: 10px;
+    color: var(--danger); border: 1px solid var(--danger); border-radius: 10px;
+    padding: 1px 7px; margin-left: 6px; text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .low-stock-banner {
+    background: rgba(193,97,61,0.12); border: 1px solid var(--danger); border-radius: var(--radius);
+    padding: 12px 16px; margin-bottom: 16px;
+  }
+  .low-stock-banner .lb-title {
+    font-family: var(--font-display); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--danger); margin-bottom: 8px; font-weight: 500;
+  }
+  .low-stock-banner .lb-row {
+    display: flex; justify-content: space-between; align-items: center; font-size: 12.5px;
+    padding: 5px 0; cursor: pointer;
+  }
+  .low-stock-banner .lb-row:hover { color: var(--accent); }
+  .low-stock-banner .lb-qty { font-family: var(--font-mono); color: var(--danger); }
+
+  /* ---------- category manager ---------- */
+  .cat-manage-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 4px; border-bottom: 1px solid var(--border); font-size: 13.5px;
+  }
+  .cat-manage-row:last-child { border-bottom: none; }
+  .cat-manage-row .cm-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-left: 8px; }
+  .cat-remove-btn {
+    background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 6px;
+  }
+  .cat-remove-btn:hover { color: var(--danger); }
+  .cat-add-row { display: flex; gap: 8px; margin-top: 14px; }
+  .cat-add-row input { flex: 1; }
+  .cat-manage-row .cm-actions { display: flex; align-items: center; gap: 2px; }
+  .cat-edit-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; padding: 2px 6px; }
+  .cat-edit-btn:hover { color: var(--accent); }
+  .cat-edit-row { display: flex; gap: 6px; align-items: center; flex: 1; }
+  .cat-edit-row input { flex: 1; background: var(--bg); border: 1px solid var(--accent); color: var(--text); padding: 6px 8px; border-radius: var(--radius); font-family: var(--font-body); font-size: 13px; }
+  .cat-edit-row button { font-size: 11px; padding: 5px 9px; }
+
+  @media (max-width: 480px) {
+    .detail-grid { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  }
+</style>
+
+<div id="app">
+  <div class="header">
+    <div class="header-top">
+      <div class="brand"><span class="brand-mark"></span><h1>器材資產管理</h1></div>
+      <button class="btn btn-primary" id="btn-add-main">+ 新增</button>
+    </div>
+    <div class="tabs">
+      <div class="tab active" data-tab="equipment">器材清單</div>
+      <div class="tab" data-tab="projects">拍攝計畫</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div id="toolbar-equipment" class="toolbar">
+      <input class="search-input" id="search-input" placeholder="搜尋名稱、資產編號、品牌型號...">
+      <select class="filter-select" id="status-filter">
+        <option value="">全部狀態</option>
+        <option value="可用">可用</option>
+        <option value="使用中">使用中</option>
+        <option value="已預約">已預約</option>
+        <option value="維修中">維修中</option>
+        <option value="已報廢">已報廢</option>
+        <option value="低庫存">低庫存</option>
+      </select>
+    </div>
+    <div id="chip-row" class="chip-row"></div>
+
+    <div id="view-equipment">
+      <div id="low-stock-banner"></div>
+      <div id="filter-banner"></div>
+      <div id="group-overview"></div>
+      <div id="equipment-grid" class="grid"></div>
+      <div id="equipment-empty" class="empty-state" style="display:none;">
+        <h3>還沒有任何器材</h3>
+        <p>點擊右上角「+ 新增」，拍張照、填幾個欄位，開始建立你的資產清單。</p>
+      </div>
+    </div>
+
+    <div id="view-projects" style="display:none;">
+      <div class="toolbar">
+        <div style="flex:1"></div>
+      </div>
+      <div id="project-list"></div>
+      <div id="project-empty" class="empty-state" style="display:none;">
+        <h3>還沒有拍攝計畫</h3>
+        <p>建立一個拍攝計畫，把要用到的器材勾選進去，之後排新案子就能一眼看出檔期衝突。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<script>
+(function(){
+  const DEFAULT_CATEGORIES = ['攝影器材','棚內道具','工具設備','大型傢具','其他'];
+  const CONDITIONS = ['良好','待維修','已報廢'];
+  const STORE_KEY = 'studio-inventory-data-v1';
+  const SHARED = true;
+
+  // ---------- Supabase 設定 ----------
+  const SUPABASE_URL = 'https://lnodjdgdavjfzivqbvpa.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_brQdCfXjTroYalAr7iZ8qQ_ZzRTG7z8';
+  const SUPABASE_TABLE = 'studio_data';
+
+  let state = { equipment: [], projects: [], categories: DEFAULT_CATEGORIES.slice() };
+  let activeTab = 'equipment';
+  let activeCategory = '';
+  let activeGroup = '';
+  let loaded = false;
+
+  const LOG_TYPE_META = {
+    purchase: { label:'購入', color:'var(--ok)' },
+    loss: { label:'耗損', color:'var(--danger)' },
+    adjustment: { label:'盤點調整', color:'var(--warn)' },
+    initial: { label:'建檔', color:'var(--text-muted)' }
+  };
+
+  function qtyOf(item){
+    return (item.quantity === '' || item.quantity === null || item.quantity === undefined) ? null : Number(item.quantity);
+  }
+
+  function isLowStock(item){
+    const q = qtyOf(item);
+    const t = (item.lowStockThreshold === '' || item.lowStockThreshold === null || item.lowStockThreshold === undefined) ? null : Number(item.lowStockThreshold);
+    if (q === null || t === null) return false;
+    return q <= t;
+  }
+
+  function computeGroups(){
+    const map = {};
+    state.equipment.forEach(i=>{
+      if (!i.groupName) return;
+      if (!map[i.groupName]) map[i.groupName] = { name: i.groupName, totalQty: 0, items: [] };
+      const q = qtyOf(i);
+      map[i.groupName].totalQty += (q === null ? 1 : q);
+      map[i.groupName].items.push(i);
+    });
+    const groups = Object.values(map);
+    groups.forEach(g=>{
+      const withThreshold = g.items.filter(i=> i.lowStockThreshold !== '' && i.lowStockThreshold !== null && i.lowStockThreshold !== undefined);
+      if (withThreshold.length === g.items.length && g.items.length > 0){
+        const totalThreshold = withThreshold.reduce((sum,i)=> sum + Number(i.lowStockThreshold), 0);
+        g.lowStock = g.totalQty <= totalThreshold;
+      } else {
+        g.lowStock = false;
+      }
+    });
+    return groups.sort((a,b)=> a.name.localeCompare(b.name));
+  }
+
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+  function todayStr(){ return new Date().toISOString().slice(0,10); }
+  function esc(s){ return (s||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function overlaps(s1,e1,s2,e2){ return !(e1 < s2 || e2 < s1); }
+
+  function computeStatus(item){
+    if (item.condition === '已報廢') return { label:'已報廢', color:'var(--off)' };
+    const today = todayStr();
+    const active = state.projects.find(p => p.itemIds.includes(item.id) && overlaps(p.startDate,p.endDate,today,today));
+    if (active) return { label:'使用中', color:'var(--warn)' };
+    const upcoming = state.projects.find(p => p.itemIds.includes(item.id) && p.startDate > today);
+    if (upcoming) return { label:'已預約', color:'var(--warn)' };
+    if (item.condition === '待維修') return { label:'維修中', color:'var(--danger)' };
+    return { label:'可用', color:'var(--ok)' };
+  }
+
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(()=> t.classList.remove('show'), 2200);
+  }
+
+  function supabaseHeaders(){
+    return {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json'
+    };
+  }
+
+  async function loadData(){
+    try {
+      const url = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?id=eq.${encodeURIComponent(STORE_KEY)}&select=value`;
+      const res = await fetch(url, { headers: supabaseHeaders() });
+      if (!res.ok) throw new Error('讀取失敗: ' + res.status);
+      const rows = await res.json();
+      if (rows && rows[0] && rows[0].value) {
+        const parsed = JSON.parse(rows[0].value);
+        state.equipment = parsed.equipment || [];
+        state.projects = parsed.projects || [];
+        state.categories = (parsed.categories && parsed.categories.length) ? parsed.categories : DEFAULT_CATEGORIES.slice();
+      }
+    } catch(e){
+      console.error(e);
+      state = { equipment: [], projects: [], categories: DEFAULT_CATEGORIES.slice() };
+    }
+    loaded = true;
+  }
+
+  async function saveData(){
+    try {
+      const url = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?on_conflict=id`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: Object.assign(supabaseHeaders(), { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+        body: JSON.stringify([{ id: STORE_KEY, value: JSON.stringify(state), updated_at: new Date().toISOString() }])
+      });
+      if (!res.ok) throw new Error('儲存失敗: ' + res.status);
+    } catch(e){
+      toast('儲存失敗，請檢查網路連線後再試一次');
+      console.error(e);
+    }
+  }
+
+  // ---------- image compression ----------
+  function compressImage(file){
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = (e)=>{
+        const img = new Image();
+        img.onload = ()=>{
+          const maxDim = 640;
+          let w = img.width, h = img.height;
+          if (w > h && w > maxDim){ h = h*maxDim/w; w = maxDim; }
+          else if (h > maxDim){ w = w*maxDim/h; h = maxDim; }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.65));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ---------- rendering ----------
+  function render(){
+    renderChips();
+    if (activeTab === 'equipment') renderEquipment(); else renderProjects();
+  }
+
+  function renderChips(){
+    const row = document.getElementById('chip-row');
+    if (activeTab !== 'equipment'){ row.innerHTML=''; return; }
+    row.innerHTML = ['全部',...state.categories].map(c=>{
+      const val = c === '全部' ? '' : c;
+      const isActive = activeCategory === val;
+      return `<div class="chip ${isActive?'active':''}" data-cat="${esc(val)}">${esc(c)}</div>`;
+    }).join('') + `<div class="chip chip-manage" id="manage-categories-btn" title="管理分類">⚙</div>`;
+    row.querySelectorAll('.chip[data-cat]').forEach(el=>{
+      el.addEventListener('click', ()=>{ activeCategory = el.dataset.cat; activeGroup=''; render(); });
+    });
+    document.getElementById('manage-categories-btn').addEventListener('click', openCategoryManager);
+  }
+
+  function renderEquipment(){
+    document.getElementById('view-equipment').style.display = '';
+    document.getElementById('view-projects').style.display = 'none';
+    document.getElementById('toolbar-equipment').style.display = '';
+
+    const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
+    const statusFilter = document.getElementById('status-filter').value;
+
+    // low stock banner (based on full inventory, not current filters)
+    const lowStockItems = state.equipment.filter(isLowStock).sort((a,b)=> qtyOf(a) - qtyOf(b));
+    const lowBox = document.getElementById('low-stock-banner');
+    if (lowStockItems.length === 0){
+      lowBox.innerHTML = '';
+    } else {
+      lowBox.innerHTML = `
+        <div class="low-stock-banner">
+          <div class="lb-title">⚠ ${lowStockItems.length} 項庫存偏低</div>
+          ${lowStockItems.map(i=>`
+            <div class="lb-row" data-id="${i.id}">
+              <span>${esc(i.name)}${i.groupName ? ' · '+esc(i.groupName) : ''}</span>
+              <span class="lb-qty">${qtyOf(i)} / 門檻 ${i.lowStockThreshold}</span>
+            </div>`).join('')}
+        </div>`;
+      lowBox.querySelectorAll('.lb-row').forEach(el=>{
+        el.addEventListener('click', ()=> openDetail(el.dataset.id));
+      });
+    }
+
+    // group overview (always based on full set, not filtered)
+    const groups = computeGroups();
+    const groupBox = document.getElementById('group-overview');
+    if (groups.length === 0){
+      groupBox.innerHTML = '';
+    } else {
+      groupBox.innerHTML = `
+        <div class="group-overview-wrap">
+          <div class="group-overview-label">群組總覽</div>
+          <div class="group-chip-row">
+            ${groups.map(g=>`
+              <div class="group-chip ${activeGroup===g.name?'active':''} ${g.lowStock?'low':''}" data-group="${esc(g.name)}">
+                ${g.lowStock ? '<span class="gc-dot"></span>' : ''}
+                <span>${esc(g.name)}</span>
+                <span class="gc-count">${g.totalQty} 件 · ${g.items.length} 品項</span>
+              </div>`).join('')}
+          </div>
+        </div>`;
+      groupBox.querySelectorAll('.group-chip').forEach(el=>{
+        el.addEventListener('click', ()=>{
+          const name = el.dataset.group;
+          activeGroup = (activeGroup === name) ? '' : name;
+          activeCategory = '';
+          render();
+        });
+      });
+    }
+
+    const banner = document.getElementById('filter-banner');
+    if (activeGroup){
+      const g = groups.find(x=>x.name===activeGroup);
+      banner.innerHTML = `<div class="active-filter-banner"><span>正在檢視群組 <strong>${esc(activeGroup)}</strong>${g ? '　共 '+g.totalQty+' 件' : ''}</span><button id="clear-group">清除篩選</button></div>`;
+      document.getElementById('clear-group').addEventListener('click', ()=>{ activeGroup=''; render(); });
+    } else {
+      banner.innerHTML = '';
+    }
+
+    let items = state.equipment.slice().sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+    if (activeGroup) items = items.filter(i => i.groupName === activeGroup);
+    else if (activeCategory) items = items.filter(i => i.category === activeCategory);
+    if (q) items = items.filter(i => (i.name+i.code+i.brand).toLowerCase().includes(q));
+    if (statusFilter === '低庫存') items = items.filter(isLowStock);
+    else if (statusFilter) items = items.filter(i => computeStatus(i).label === statusFilter);
+
+    const grid = document.getElementById('equipment-grid');
+    const empty = document.getElementById('equipment-empty');
+    if (items.length === 0){
+      grid.innerHTML = '';
+      empty.style.display = '';
+      empty.querySelector('p').textContent = state.equipment.length === 0
+        ? '點擊右上角「+ 新增」，拍張照、填幾個欄位，開始建立你的資產清單。'
+        : '沒有符合搜尋或篩選條件的器材。';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = items.map(item=>{
+      const st = computeStatus(item);
+      const q = qtyOf(item);
+      return `
+      <div class="tag-card" data-id="${item.id}">
+        <div class="photo-frame">
+          <div class="punch-hole"></div>
+          <div class="photo-inner">
+            ${item.hasPhoto ? `<img data-photo-for="${item.id}" src="" />` : `<span class="photo-placeholder">無照片</span>`}
+          </div>
+        </div>
+        <div class="tag-body">
+          <div class="tag-eyebrow">${esc(item.category)}${item.groupName ? ' · ' + esc(item.groupName) : ''}</div>
+          <div class="tag-name">${esc(item.name)}</div>
+          <div class="tag-code">${esc(item.code || '無編號')}</div>
+          <div class="status-row"><span class="status-dot" style="background:${st.color}"></span><span class="status-label">${st.label}</span></div>
+          ${q !== null ? `<div class="qty-badge ${isLowStock(item)?'low-stock':''}">數量：${q}${isLowStock(item) ? '<span class="low-stock-tag">低庫存</span>' : ''}</div>` : ''}
+          ${item.location ? `<div class="location-row">📍 ${esc(item.location)}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+    grid.querySelectorAll('.tag-card').forEach(el=>{
+      el.addEventListener('click', ()=> openDetail(el.dataset.id));
+    });
+    loadThumbnails(items.filter(i=>i.hasPhoto).map(i=>i.id));
+  }
+
+  async function loadThumbnails(ids){
+    await Promise.all(ids.map(async id=>{
+      try {
+        const res = await window.storage.get('photo:'+id, SHARED);
+        if (res && res.value){
+          const el = document.querySelector(`img[data-photo-for="${id}"]`);
+          if (el) el.src = res.value;
+        }
+      } catch(e){ /* no photo found, ignore */ }
+    }));
+  }
+
+  function renderProjects(){
+    document.getElementById('view-equipment').style.display = 'none';
+    document.getElementById('view-projects').style.display = '';
+    document.getElementById('toolbar-equipment').style.display = 'none';
+
+    const list = document.getElementById('project-list');
+    const empty = document.getElementById('project-empty');
+    const projects = state.projects.slice().sort((a,b)=> a.startDate.localeCompare(b.startDate));
+
+    if (projects.length === 0){
+      list.innerHTML = '';
+      empty.style.display = '';
+      return;
+    }
+    empty.style.display = 'none';
+
+    const today = todayStr();
+    list.innerHTML = projects.map(p=>{
+      let badge = { text:'即將到來', color:'var(--warn)', bg:'var(--accent-dim)' };
+      if (overlaps(p.startDate,p.endDate,today,today)) badge = { text:'進行中', color:'var(--warn)', bg:'var(--accent-dim)' };
+      else if (p.endDate < today) badge = { text:'已結束', color:'var(--off)', bg:'transparent' };
+      return `
+      <div class="project-card" data-id="${p.id}">
+        <div class="project-top">
+          <div class="project-name">${esc(p.name)}</div>
+          <div class="project-dates">${esc(p.startDate)} → ${esc(p.endDate)}</div>
+        </div>
+        <div class="project-meta">${p.itemIds.length} 件器材${p.notes ? ' · ' + esc(p.notes) : ''}</div>
+        <span class="project-badge" style="color:${badge.color}; background:${badge.bg}; border:1px solid ${badge.color}">${badge.text}</span>
+      </div>`;
+    }).join('');
+
+    list.querySelectorAll('.project-card').forEach(el=>{
+      el.addEventListener('click', ()=> openProjectForm(el.dataset.id));
+    });
+  }
+
+  // ---------- Modal helpers ----------
+  function openModal(html){
+    const root = document.getElementById('modal-root');
+    root.innerHTML = `<div class="modal-overlay" id="overlay">${html}</div>`;
+    document.getElementById('overlay').addEventListener('click', (e)=>{
+      if (e.target.id === 'overlay') closeModal();
+    });
+  }
+  function closeModal(){ document.getElementById('modal-root').innerHTML = ''; }
+
+  // ---------- Equipment detail ----------
+  async function openDetail(id){
+    const item = state.equipment.find(i=>i.id===id);
+    if (!item) return;
+    const st = computeStatus(item);
+    const q = qtyOf(item);
+    const relatedProjects = state.projects.filter(p=>p.itemIds.includes(id)).sort((a,b)=>a.startDate.localeCompare(b.startDate));
+    const log = (item.quantityLog || []).slice().sort((a,b)=> b.date.localeCompare(a.date) || (b.createdAt||0)-(a.createdAt||0));
+
+    openModal(`
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">${esc(item.name)}</div>
+          <button class="close-x" id="close-detail">&times;</button>
+        </div>
+        <div class="detail-photo" id="detail-photo-holder"><span class="ph-icon">載入中...</span></div>
+        <div class="status-row" style="margin-bottom:14px;"><span class="status-dot" style="background:${st.color}"></span><span class="status-label">${st.label}</span></div>
+        <div class="detail-grid">
+          <div class="detail-item"><label>分類</label><div>${esc(item.category)}</div></div>
+          <div class="detail-item mono"><label>資產編號</label><div>${esc(item.code||'—')}</div></div>
+          <div class="detail-item"><label>品牌型號</label><div>${esc(item.brand||'—')}</div></div>
+          <div class="detail-item"><label>群組</label><div>${item.groupName ? `<a href="#" class="group-link" id="detail-group-link" data-group="${esc(item.groupName)}">${esc(item.groupName)} →</a>` : '—'}</div></div>
+          <div class="detail-item"><label>存放位置</label><div>${esc(item.location||'—')}</div></div>
+          <div class="detail-item mono"><label>購入日期</label><div>${esc(item.purchaseDate||'—')}</div></div>
+          <div class="detail-item mono"><label>原價</label><div>${item.price ? 'NT$ '+esc(item.price) : '—'}</div></div>
+        </div>
+        ${item.notes ? `<div class="detail-notes">${esc(item.notes)}</div>` : ''}
+
+        ${q !== null ? `
+        <div class="section-label">數量管理</div>
+        <div class="qty-section">
+          <div>
+            <div class="qty-current-label">目前數量${isLowStock(item) ? '<span class="low-stock-tag">低庫存</span>' : ''}</div>
+            <div class="qty-current">${q}</div>
+            ${item.lowStockThreshold !== '' && item.lowStockThreshold !== null && item.lowStockThreshold !== undefined ? `<div class="hint-text">低庫存門檻：${item.lowStockThreshold}</div>` : ''}
+          </div>
+          <div class="qty-actions">
+            <button class="btn btn-sm" id="btn-qty-purchase">+ 進貨</button>
+            <button class="btn btn-sm" id="btn-qty-loss">− 耗損 / 報廢</button>
+            <button class="btn btn-sm btn-ghost" id="btn-qty-adjust">🔧 盤點修正</button>
+          </div>
+        </div>
+        <div>
+          ${log.length === 0 ? '<div class="hint-text">尚無異動紀錄。</div>' :
+            log.map(l=>{
+              const meta = LOG_TYPE_META[l.type] || { label:l.type, color:'var(--text-muted)' };
+              const deltaText = l.delta > 0 ? `+${l.delta}` : `${l.delta}`;
+              return `<div class="log-row">
+                <span class="log-date">${esc(l.date)}</span>
+                <span class="log-type" style="color:${meta.color}; border:1px solid ${meta.color}">${meta.label}</span>
+                <span class="log-note">${esc(l.note||'')}</span>
+                <span class="log-delta" style="color:${l.delta<0?'var(--danger)':(l.delta>0?'var(--ok)':'var(--text-muted)')}">${deltaText !== '0' ? deltaText : '='+l.quantityAfter}</span>
+              </div>`;
+            }).join('')}
+        </div>
+        ` : ''}
+
+        <div class="section-label">拍攝計畫使用紀錄</div>
+        ${relatedProjects.length === 0 ? '<div class="hint-text">目前沒有任何拍攝計畫使用這件器材。</div>' :
+          relatedProjects.map(p=>`<div class="usage-row"><span>${esc(p.name)}</span><span style="font-family:var(--font-mono); color:var(--text-muted)">${esc(p.startDate)} → ${esc(p.endDate)}</span></div>`).join('')}
+        <div class="modal-actions">
+          <button class="btn btn-danger btn-sm" id="btn-delete-item">刪除</button>
+          <button class="btn btn-sm" id="btn-edit-item">編輯</button>
+        </div>
+      </div>
+    `);
+    document.getElementById('close-detail').addEventListener('click', closeModal);
+    document.getElementById('btn-edit-item').addEventListener('click', ()=> openEquipmentForm(id));
+    const groupLink = document.getElementById('detail-group-link');
+    if (groupLink) groupLink.addEventListener('click', (e)=>{
+      e.preventDefault();
+      closeModal();
+      activeTab = 'equipment';
+      document.querySelectorAll('.tab').forEach(t=> t.classList.toggle('active', t.dataset.tab === 'equipment'));
+      activeGroup = groupLink.dataset.group;
+      activeCategory = '';
+      render();
+    });
+    if (q !== null){
+      document.getElementById('btn-qty-purchase').addEventListener('click', ()=> openStockModal(id, 'purchase'));
+      document.getElementById('btn-qty-loss').addEventListener('click', ()=> openStockModal(id, 'loss'));
+      document.getElementById('btn-qty-adjust').addEventListener('click', ()=> openStockModal(id, 'adjustment'));
+    }
+    document.getElementById('btn-delete-item').addEventListener('click', async ()=>{
+      if (!confirm('確定要刪除這件器材嗎？此動作無法復原。')) return;
+      state.equipment = state.equipment.filter(i=>i.id!==id);
+      await saveData();
+      try { await window.storage.delete('photo:'+id, SHARED); } catch(e){}
+      closeModal();
+      render();
+      toast('已刪除');
+    });
+
+    if (item.hasPhoto){
+      try {
+        const res = await window.storage.get('photo:'+id, SHARED);
+        const holder = document.getElementById('detail-photo-holder');
+        if (holder) holder.innerHTML = res && res.value ? `<img src="${res.value}"/>` : `<span class="ph-icon">照片載入失敗</span>`;
+      } catch(e){
+        const holder = document.getElementById('detail-photo-holder');
+        if (holder) holder.innerHTML = `<span class="ph-icon">照片載入失敗</span>`;
+      }
+    } else {
+      document.getElementById('detail-photo-holder').innerHTML = `<span class="ph-icon">無照片</span>`;
+    }
+  }
+
+  // ---------- Stock movement modal ----------
+  function openStockModal(itemId, type){
+    const item = state.equipment.find(i=>i.id===itemId);
+    if (!item) return;
+    const currentQty = qtyOf(item) || 0;
+    const titles = { purchase: '登記進貨', loss: '登記耗損 / 報廢', adjustment: '盤點修正數量' };
+    const isAdjust = type === 'adjustment';
+
+    openModal(`
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-header">
+          <div class="modal-title">${titles[type]}</div>
+          <button class="close-x" id="close-stock">&times;</button>
+        </div>
+        <div class="hint-text" style="margin-bottom:12px;">目前數量：${currentQty}</div>
+        <div class="field">
+          <label>日期</label>
+          <input type="date" id="s-date" value="${todayStr()}">
+        </div>
+        <div class="field">
+          <label>${isAdjust ? '修正後正確數量' : (type==='purchase' ? '新增數量' : '耗損數量')}</label>
+          <input type="number" id="s-amount" min="0" placeholder="${isAdjust ? currentQty : '例如：2'}">
+        </div>
+        <div class="field">
+          <label>備註（選填）</label>
+          <input type="text" id="s-note" placeholder="${type==='purchase' ? '例如：向 XX 店購入' : (type==='loss' ? '例如：拍攝中損壞' : '例如：盤點時發現短少')}">
+        </div>
+        <div class="modal-actions">
+          <button class="btn" id="cancel-stock">取消</button>
+          <button class="btn btn-primary" id="save-stock">儲存</button>
+        </div>
+      </div>
+    `);
+    document.getElementById('close-stock').addEventListener('click', ()=> openDetail(itemId));
+    document.getElementById('cancel-stock').addEventListener('click', ()=> openDetail(itemId));
+    document.getElementById('save-stock').addEventListener('click', async ()=>{
+      const dateVal = document.getElementById('s-date').value || todayStr();
+      const amountVal = document.getElementById('s-amount').value;
+      const note = document.getElementById('s-note').value.trim();
+      if (amountVal === '' || isNaN(Number(amountVal)) || Number(amountVal) < 0){ toast('請輸入有效的數字'); return; }
+
+      const amount = Number(amountVal);
+      let delta, newQty;
+      if (type === 'purchase'){ delta = amount; newQty = currentQty + amount; }
+      else if (type === 'loss'){ delta = -amount; newQty = Math.max(0, currentQty - amount); }
+      else { newQty = amount; delta = amount - currentQty; }
+
+      const entry = { id: uid(), date: dateVal, type, delta, quantityAfter: newQty, note, createdAt: Date.now() };
+      const idx = state.equipment.findIndex(i=>i.id===itemId);
+      if (!state.equipment[idx].quantityLog) state.equipment[idx].quantityLog = [];
+      state.equipment[idx].quantityLog.push(entry);
+      state.equipment[idx].quantity = newQty;
+
+      const btn = document.getElementById('save-stock');
+      btn.disabled = true; btn.textContent = '儲存中...';
+      try {
+        await saveData();
+        toast('已更新數量');
+        openDetail(itemId);
+        render();
+      } catch(e){
+        toast('儲存失敗，請再試一次');
+        btn.disabled = false; btn.textContent = '儲存';
+      }
+    });
+  }
+
+  // ---------- Equipment form ----------
+  function openEquipmentForm(id){
+    const editing = !!id;
+    const item = editing ? state.equipment.find(i=>i.id===id) : {
+      name:'', category:state.categories[0], brand:'', code:'', location:'', purchaseDate:'', price:'', condition:'良好', notes:'', hasPhoto:false, quantity:'', groupName:'', quantityLog:[], lowStockThreshold:''
+    };
+    let pendingPhotoDataUrl = null;
+    let removePhoto = false;
+
+    openModal(`
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">${editing ? '編輯器材' : '新增器材'}</div>
+          <button class="close-x" id="close-form">&times;</button>
+        </div>
+        <div class="photo-upload-area">
+          <div class="photo-preview" id="photo-preview">
+            ${item.hasPhoto ? '<span class="ph-icon">載入中...</span>' : '<span class="ph-icon">尚無照片</span>'}
+          </div>
+          <input type="file" accept="image/*" capture="environment" id="photo-input" style="display:none">
+          <button class="btn btn-sm" id="btn-take-photo" type="button">📷 拍照 / 上傳照片</button>
+          ${item.hasPhoto ? '<button class="btn btn-sm btn-ghost" id="btn-remove-photo" type="button" style="margin-left:8px;">移除照片</button>' : ''}
+        </div>
+
+        <div class="field">
+          <label>名稱 *</label>
+          <input type="text" id="f-name" value="${esc(item.name)}" placeholder="例如：Sony A7SIII">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>分類 *</label>
+            <select id="f-category">${state.categories.map(c=>`<option ${c===item.category?'selected':''}>${esc(c)}</option>`).join('')}</select>
+          </div>
+          <div class="field">
+            <label>狀況</label>
+            <select id="f-condition">${CONDITIONS.map(c=>`<option ${c===item.condition?'selected':''}>${esc(c)}</option>`).join('')}</select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>品牌型號</label>
+            <input type="text" id="f-brand" value="${esc(item.brand)}" placeholder="例如：Sony / A7SIII">
+          </div>
+          <div class="field">
+            <label>資產編號</label>
+            <input type="text" id="f-code" value="${esc(item.code)}" placeholder="例如：CAM-014">
+          </div>
+        </div>
+        <div class="field">
+          <label>存放位置</label>
+          <input type="text" id="f-location" value="${esc(item.location)}" placeholder="例如：A棚器材櫃 2 號">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>群組名稱（選填）</label>
+            <input type="text" id="f-group" value="${esc(item.groupName||'')}" placeholder="例如：圍裙">
+            <div class="qty-field-hint">同群組名稱的品項會自動加總、方便一起查看（例如白/黑/咖啡/藍圍裙都填「圍裙」）。</div>
+          </div>
+          <div class="field">
+            <label>數量（選填）</label>
+            ${editing
+              ? `<input type="number" id="f-quantity" value="${esc(item.quantity===undefined?'':item.quantity)}" disabled style="opacity:0.6;">
+                 <div class="qty-field-hint">數量請至詳細頁面用「進貨 / 耗損 / 盤點修正」更動，才能保留紀錄。</div>`
+              : `<input type="number" id="f-quantity" min="0" value="${esc(item.quantity)}" placeholder="例如：3">
+                 <div class="qty-field-hint">若這件器材需要追蹤庫存數量（例如剪刀、圍裙），在這裡填入建檔時的初始數量。</div>`
+            }
+          </div>
+        </div>
+        <div class="field">
+          <label>低庫存門檻（選填）</label>
+          <input type="number" id="f-threshold" min="0" value="${esc(item.lowStockThreshold===undefined?'':item.lowStockThreshold)}" placeholder="例如：2（數量低於或等於這個值時會提醒）">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>購入日期</label>
+            <input type="date" id="f-purchase" value="${esc(item.purchaseDate)}">
+          </div>
+          <div class="field">
+            <label>原價 (NT$)</label>
+            <input type="number" id="f-price" value="${esc(item.price)}" placeholder="0">
+          </div>
+        </div>
+        <div class="field">
+          <label>備註</label>
+          <textarea id="f-notes" placeholder="配件、注意事項等...">${esc(item.notes)}</textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="btn" id="btn-cancel-form">取消</button>
+          <button class="btn btn-primary" id="btn-save-form">儲存</button>
+        </div>
+      </div>
+    `);
+
+    document.getElementById('close-form').addEventListener('click', closeModal);
+    document.getElementById('btn-cancel-form').addEventListener('click', closeModal);
+    document.getElementById('btn-take-photo').addEventListener('click', ()=> document.getElementById('photo-input').click());
+
+    const removeBtn = document.getElementById('btn-remove-photo');
+    if (removeBtn) removeBtn.addEventListener('click', ()=>{
+      removePhoto = true;
+      pendingPhotoDataUrl = null;
+      document.getElementById('photo-preview').innerHTML = '<span class="ph-icon">尚無照片</span>';
+    });
+
+    document.getElementById('photo-input').addEventListener('change', async (e)=>{
+      const file = e.target.files[0];
+      if (!file) return;
+      document.getElementById('photo-preview').innerHTML = '<span class="ph-icon">處理中...</span>';
+      try {
+        pendingPhotoDataUrl = await compressImage(file);
+        removePhoto = false;
+        document.getElementById('photo-preview').innerHTML = `<img src="${pendingPhotoDataUrl}"/>`;
+      } catch(err){
+        toast('照片處理失敗，請再試一次');
+        document.getElementById('photo-preview').innerHTML = '<span class="ph-icon">尚無照片</span>';
+      }
+    });
+
+    document.getElementById('btn-save-form').addEventListener('click', async ()=>{
+      const name = document.getElementById('f-name').value.trim();
+      if (!name){ toast('請輸入名稱'); return; }
+      const saveBtn = document.getElementById('btn-save-form');
+      saveBtn.disabled = true; saveBtn.textContent = '儲存中...';
+
+      const groupName = document.getElementById('f-group').value.trim();
+      const rawQty = document.getElementById('f-quantity').value;
+      const rawThreshold = document.getElementById('f-threshold').value;
+
+      const data = {
+        id: editing ? item.id : uid(),
+        name,
+        category: document.getElementById('f-category').value,
+        brand: document.getElementById('f-brand').value.trim(),
+        code: document.getElementById('f-code').value.trim(),
+        location: document.getElementById('f-location').value.trim(),
+        groupName: groupName,
+        lowStockThreshold: rawThreshold === '' ? '' : Number(rawThreshold),
+        purchaseDate: document.getElementById('f-purchase').value,
+        price: document.getElementById('f-price').value,
+        condition: document.getElementById('f-condition').value,
+        notes: document.getElementById('f-notes').value.trim(),
+        hasPhoto: pendingPhotoDataUrl ? true : (removePhoto ? false : !!item.hasPhoto),
+        createdAt: editing ? item.createdAt : Date.now()
+      };
+
+      if (editing){
+        // quantity & log are only changed via the stock-movement modal, never overwritten here
+        data.quantity = item.quantity === undefined ? '' : item.quantity;
+        data.quantityLog = item.quantityLog || [];
+      } else {
+        if (rawQty === '' || rawQty === null){
+          data.quantity = '';
+          data.quantityLog = [];
+        } else {
+          const initQty = Number(rawQty);
+          data.quantity = initQty;
+          data.quantityLog = [{ id: uid(), date: todayStr(), type:'initial', delta: initQty, quantityAfter: initQty, note:'建檔初始數量', createdAt: Date.now() }];
+        }
+      }
+
+      try {
+        if (pendingPhotoDataUrl){
+          await window.storage.set('photo:'+data.id, pendingPhotoDataUrl, SHARED);
+        } else if (removePhoto){
+          try { await window.storage.delete('photo:'+data.id, SHARED); } catch(e){}
+        }
+        if (editing){
+          const idx = state.equipment.findIndex(i=>i.id===item.id);
+          state.equipment[idx] = data;
+        } else {
+          state.equipment.push(data);
+        }
+        await saveData();
+        closeModal();
+        render();
+        toast(editing ? '已更新器材' : '已新增器材');
+      } catch(err){
+        toast('儲存失敗，請再試一次');
+        saveBtn.disabled = false; saveBtn.textContent = '儲存';
+      }
+    });
+
+    if (editing && item.hasPhoto){
+      window.storage.get('photo:'+id, SHARED).then(res=>{
+        const preview = document.getElementById('photo-preview');
+        if (preview && res && res.value) preview.innerHTML = `<img src="${res.value}"/>`;
+      }).catch(()=>{
+        const preview = document.getElementById('photo-preview');
+        if (preview) preview.innerHTML = '<span class="ph-icon">尚無照片</span>';
+      });
+    }
+  }
+
+  // ---------- Project form ----------
+  function openProjectForm(id){
+    const editing = !!id;
+    const project = editing ? state.projects.find(p=>p.id===id) : {
+      name:'', startDate: todayStr(), endDate: todayStr(), notes:'', itemIds: []
+    };
+    let selectedIds = new Set(project.itemIds);
+
+    function conflictsFor(itemId, startDate, endDate){
+      return state.projects.filter(p => p.id !== (editing?project.id:null) && p.itemIds.includes(itemId) && overlaps(p.startDate,p.endDate,startDate,endDate));
+    }
+
+    function renderChecklist(filterText){
+      const start = document.getElementById('p-start') ? document.getElementById('p-start').value : project.startDate;
+      const end = document.getElementById('p-end') ? document.getElementById('p-end').value : project.endDate;
+      const q = (filterText||'').toLowerCase();
+      let items = state.equipment.slice().sort((a,b)=>a.name.localeCompare(b.name));
+      if (q) items = items.filter(i=>(i.name+i.code).toLowerCase().includes(q));
+      const list = document.getElementById('item-checklist');
+      if (items.length === 0){ list.innerHTML = '<div class="hint-text" style="padding:10px;">尚未建立任何器材，請先到「器材清單」新增。</div>'; return; }
+      list.innerHTML = items.map(i=>{
+        const checked = selectedIds.has(i.id);
+        const conflicts = (start && end) ? conflictsFor(i.id, start, end) : [];
+        return `
+        <div class="check-row">
+          <input type="checkbox" data-id="${i.id}" ${checked?'checked':''}>
+          <div>
+            <div class="ci-name">${esc(i.name)}</div>
+            <div class="ci-code">${esc(i.code||'')} ${i.category?'· '+esc(i.category):''}</div>
+            ${conflicts.length ? `<div class="ci-conflict">⚠ 與「${esc(conflicts[0].name)}」檔期重疊</div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+      list.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+        cb.addEventListener('change', ()=>{
+          if (cb.checked) selectedIds.add(cb.dataset.id); else selectedIds.delete(cb.dataset.id);
+        });
+      });
+    }
+
+    openModal(`
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">${editing?'編輯拍攝計畫':'新增拍攝計畫'}</div>
+          <button class="close-x" id="close-form">&times;</button>
+        </div>
+        <div class="field"><label>計畫名稱 *</label><input type="text" id="p-name" value="${esc(project.name)}" placeholder="例如：品牌形象廣告 - 8月檔"></div>
+        <div class="field-row">
+          <div class="field"><label>開始日期 *</label><input type="date" id="p-start" value="${esc(project.startDate)}"></div>
+          <div class="field"><label>結束日期 *</label><input type="date" id="p-end" value="${esc(project.endDate)}"></div>
+        </div>
+        <div class="field"><label>備註</label><textarea id="p-notes" placeholder="拍攝地點、聯絡窗口等...">${esc(project.notes)}</textarea></div>
+        <div class="field">
+          <label>選擇器材</label>
+          <input type="text" class="search-input" id="checklist-search" placeholder="搜尋器材..." style="margin-bottom:8px;">
+          <div class="item-checklist" id="item-checklist"></div>
+          <div class="hint-text">勾選的器材在這段日期會顯示為「已預約/使用中」。若有紅色警示，代表與其他計畫檔期重疊，仍可儲存，請自行確認是否要調整。</div>
+        </div>
+        <div class="modal-actions">
+          ${editing ? '<button class="btn btn-danger btn-sm" id="btn-delete-project" style="margin-right:auto;">刪除計畫</button>' : ''}
+          <button class="btn" id="btn-cancel-form">取消</button>
+          <button class="btn btn-primary" id="btn-save-form">儲存</button>
+        </div>
+      </div>
+    `);
+
+    renderChecklist('');
+    document.getElementById('checklist-search').addEventListener('input', (e)=> renderChecklist(e.target.value));
+    document.getElementById('p-start').addEventListener('change', ()=> renderChecklist(document.getElementById('checklist-search').value));
+    document.getElementById('p-end').addEventListener('change', ()=> renderChecklist(document.getElementById('checklist-search').value));
+
+    document.getElementById('close-form').addEventListener('click', closeModal);
+    document.getElementById('btn-cancel-form').addEventListener('click', closeModal);
+
+    const delBtn = document.getElementById('btn-delete-project');
+    if (delBtn) delBtn.addEventListener('click', async ()=>{
+      if (!confirm('確定要刪除這個拍攝計畫嗎？')) return;
+      state.projects = state.projects.filter(p=>p.id!==project.id);
+      await saveData();
+      closeModal();
+      render();
+      toast('已刪除計畫');
+    });
+
+    document.getElementById('btn-save-form').addEventListener('click', async ()=>{
+      const name = document.getElementById('p-name').value.trim();
+      const start = document.getElementById('p-start').value;
+      const end = document.getElementById('p-end').value;
+      if (!name){ toast('請輸入計畫名稱'); return; }
+      if (!start || !end){ toast('請選擇開始與結束日期'); return; }
+      if (end < start){ toast('結束日期不能早於開始日期'); return; }
+
+      const saveBtn = document.getElementById('btn-save-form');
+      saveBtn.disabled = true; saveBtn.textContent = '儲存中...';
+
+      const data = {
+        id: editing ? project.id : uid(),
+        name, startDate: start, endDate: end,
+        notes: document.getElementById('p-notes').value.trim(),
+        itemIds: Array.from(selectedIds),
+        createdAt: editing ? project.createdAt : Date.now()
+      };
+
+      try {
+        if (editing){
+          const idx = state.projects.findIndex(p=>p.id===project.id);
+          state.projects[idx] = data;
+        } else {
+          state.projects.push(data);
+        }
+        await saveData();
+        closeModal();
+        render();
+        toast(editing ? '已更新計畫' : '已建立計畫');
+      } catch(err){
+        toast('儲存失敗，請再試一次');
+        saveBtn.disabled = false; saveBtn.textContent = '儲存';
+      }
+    });
+  }
+
+  // ---------- Category manager ----------
+  function openCategoryManager(){
+    let editingCat = null;
+    function countInCategory(cat){ return state.equipment.filter(i=>i.category===cat).length; }
+
+    function renderList(){
+      const list = document.getElementById('cat-manage-list');
+      list.innerHTML = state.categories.map(c=>{
+        const n = countInCategory(c);
+        if (editingCat === c){
+          return `
+          <div class="cat-manage-row">
+            <div class="cat-edit-row">
+              <input type="text" id="cat-edit-input" value="${esc(c)}">
+              <button class="btn btn-primary btn-sm" id="cat-edit-save" data-old="${esc(c)}">儲存</button>
+              <button class="btn btn-sm" id="cat-edit-cancel">取消</button>
+            </div>
+          </div>`;
+        }
+        return `
+        <div class="cat-manage-row">
+          <span>${esc(c)}${n>0 ? `<span class="cm-count">${n} 件使用中</span>` : ''}</span>
+          <div class="cm-actions">
+            <button class="cat-edit-btn" data-cat="${esc(c)}" title="改名">✎</button>
+            <button class="cat-remove-btn" data-cat="${esc(c)}" title="刪除">&times;</button>
+          </div>
+        </div>`;
+      }).join('');
+
+      list.querySelectorAll('.cat-edit-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          editingCat = btn.dataset.cat;
+          renderList();
+          const input = document.getElementById('cat-edit-input');
+          if (input){ input.focus(); input.select(); }
+        });
+      });
+
+      const editInput = document.getElementById('cat-edit-input');
+      if (editInput){
+        editInput.addEventListener('keydown', (e)=>{
+          if (e.key === 'Enter') document.getElementById('cat-edit-save').click();
+          if (e.key === 'Escape'){ editingCat = null; renderList(); }
+        });
+      }
+      const saveBtn = document.getElementById('cat-edit-save');
+      if (saveBtn) saveBtn.addEventListener('click', async ()=>{
+        const oldName = saveBtn.dataset.old;
+        const newName = document.getElementById('cat-edit-input').value.trim();
+        if (!newName){ toast('分類名稱不能空白'); return; }
+        if (newName !== oldName && state.categories.includes(newName)){ toast('這個分類名稱已經存在'); return; }
+        if (newName === oldName){ editingCat = null; renderList(); return; }
+
+        const idx = state.categories.indexOf(oldName);
+        state.categories[idx] = newName;
+        state.equipment.forEach(i=>{ if (i.category === oldName) i.category = newName; });
+        if (activeCategory === oldName) activeCategory = newName;
+        await saveData();
+        editingCat = null;
+        renderList();
+        render();
+        toast('已更新分類名稱');
+      });
+      const cancelBtn = document.getElementById('cat-edit-cancel');
+      if (cancelBtn) cancelBtn.addEventListener('click', ()=>{ editingCat = null; renderList(); });
+
+      list.querySelectorAll('.cat-remove-btn').forEach(btn=>{
+        btn.addEventListener('click', async ()=>{
+          const cat = btn.dataset.cat;
+          if (state.categories.length <= 1){ toast('至少要保留一個分類'); return; }
+          const n = countInCategory(cat);
+          const msg = n > 0
+            ? `目前有 ${n} 件器材使用「${cat}」這個分類，刪除後這些器材仍會保留原本的分類文字，只是清單篩選中不會再看到這個選項。確定要刪除嗎？`
+            : `確定要刪除分類「${cat}」嗎？`;
+          if (!confirm(msg)) return;
+          state.categories = state.categories.filter(c=>c!==cat);
+          await saveData();
+          renderList();
+          render();
+          toast('已刪除分類');
+        });
+      });
+    }
+
+    openModal(`
+      <div class="modal" style="max-width:420px;">
+        <div class="modal-header">
+          <div class="modal-title">管理分類</div>
+          <button class="close-x" id="close-cat">&times;</button>
+        </div>
+        <div id="cat-manage-list"></div>
+        <div class="cat-add-row">
+          <input type="text" id="cat-new-input" placeholder="新增分類，例如：燈光配件">
+          <button class="btn btn-primary btn-sm" id="cat-add-btn">新增</button>
+        </div>
+        <div class="hint-text">分類可以依照你的使用習慣自由增減，未來還能隨時調整。</div>
+        <div class="modal-actions">
+          <button class="btn" id="cat-done-btn">完成</button>
+        </div>
+      </div>
+    `);
+    renderList();
+    document.getElementById('close-cat').addEventListener('click', closeModal);
+    document.getElementById('cat-done-btn').addEventListener('click', closeModal);
+    document.getElementById('cat-add-btn').addEventListener('click', async ()=>{
+      const input = document.getElementById('cat-new-input');
+      const name = input.value.trim();
+      if (!name){ toast('請輸入分類名稱'); return; }
+      if (state.categories.includes(name)){ toast('這個分類已經存在'); return; }
+      state.categories.push(name);
+      await saveData();
+      input.value = '';
+      renderList();
+      render();
+      toast('已新增分類');
+    });
+  }
+
+  // ---------- init ----------
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      activeTab = t.dataset.tab;
+      render();
+    });
+  });
+  document.getElementById('search-input').addEventListener('input', render);
+  document.getElementById('status-filter').addEventListener('change', render);
+  document.getElementById('btn-add-main').addEventListener('click', ()=>{
+    if (activeTab === 'equipment') openEquipmentForm(null); else openProjectForm(null);
+  });
+
+  (async function init(){
+    await loadData();
+    render();
+  })();
+})();
+</script>
