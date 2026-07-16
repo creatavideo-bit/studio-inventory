@@ -676,6 +676,31 @@
     };
   }
 
+  async function kvGet(key){
+    const url = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?id=eq.${encodeURIComponent(key)}&select=value`;
+    const res = await fetch(url, { headers: supabaseHeaders() });
+    if (!res.ok) throw new Error('讀取失敗: ' + res.status);
+    const rows = await res.json();
+    if (rows && rows[0] && rows[0].value !== undefined) return { value: rows[0].value };
+    return null;
+  }
+
+  async function kvSet(key, value){
+    const url = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?on_conflict=id`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: Object.assign(supabaseHeaders(), { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify([{ id: key, value: value, updated_at: new Date().toISOString() }])
+    });
+    if (!res.ok) throw new Error('儲存失敗: ' + res.status);
+  }
+
+  async function kvDelete(key){
+    const url = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?id=eq.${encodeURIComponent(key)}`;
+    const res = await fetch(url, { method: 'DELETE', headers: supabaseHeaders() });
+    if (!res.ok) throw new Error('刪除失敗: ' + res.status);
+  }
+
   async function loadData(){
     try {
       const url = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?id=eq.${encodeURIComponent(STORE_KEY)}&select=value`;
@@ -869,7 +894,7 @@
   async function loadThumbnails(ids){
     await Promise.all(ids.map(async id=>{
       try {
-        const res = await window.storage.get('photo:'+id, SHARED);
+        const res = await kvGet('photo:'+id);
         if (res && res.value){
           const el = document.querySelector(`img[data-photo-for="${id}"]`);
           if (el) el.src = res.value;
@@ -1012,7 +1037,7 @@
       if (!confirm('確定要刪除這件器材嗎？此動作無法復原。')) return;
       state.equipment = state.equipment.filter(i=>i.id!==id);
       await saveData();
-      try { await window.storage.delete('photo:'+id, SHARED); } catch(e){}
+      try { await kvDelete('photo:'+id); } catch(e){}
       closeModal();
       render();
       toast('已刪除');
@@ -1020,7 +1045,7 @@
 
     if (item.hasPhoto){
       try {
-        const res = await window.storage.get('photo:'+id, SHARED);
+        const res = await kvGet('photo:'+id);
         const holder = document.getElementById('detail-photo-holder');
         if (holder) holder.innerHTML = res && res.value ? `<img src="${res.value}"/>` : `<span class="ph-icon">照片載入失敗</span>`;
       } catch(e){
@@ -1261,9 +1286,9 @@
 
       try {
         if (pendingPhotoDataUrl){
-          await window.storage.set('photo:'+data.id, pendingPhotoDataUrl, SHARED);
+          await kvSet('photo:'+data.id, pendingPhotoDataUrl);
         } else if (removePhoto){
-          try { await window.storage.delete('photo:'+data.id, SHARED); } catch(e){}
+          try { await kvDelete('photo:'+data.id); } catch(e){}
         }
         if (editing){
           const idx = state.equipment.findIndex(i=>i.id===item.id);
@@ -1282,7 +1307,7 @@
     });
 
     if (editing && item.hasPhoto){
-      window.storage.get('photo:'+id, SHARED).then(res=>{
+      kvGet('photo:'+id).then(res=>{
         const preview = document.getElementById('photo-preview');
         if (preview && res && res.value) preview.innerHTML = `<img src="${res.value}"/>`;
       }).catch(()=>{
